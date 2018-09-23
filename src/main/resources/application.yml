@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/strydal
+    username: strydal
+    password: strydal
+
+
+logging:
+  level:
+    org.springframework.web.servlet: INFO
+    Exposed: DEBUG
+
+
+
+app:
+  appName: "strydal-backend"
