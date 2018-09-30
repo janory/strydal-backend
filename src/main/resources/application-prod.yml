@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: prod
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/strydal
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    generate-ddl: false
+
+
+logging:
+  level:
+    org.springframework.web.servlet: INFO
+    Exposed: INFO
