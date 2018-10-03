@@ -66,13 +66,6 @@ bootJar {
     version = "0.0.1"
 }
 
-//
-//task prepareDockerfile(type: Copy) {
-//    from "${project.buildDir}/docker"
-//    into "${project.buildDir}/docker"
-//    filter { line -> line.replaceAll('\\$JAR_FILE', "${bootJar.archiveName}.jar") }
-//}
-
 task prepareDockerfile {
     doLast {
         def dockerfileTemplate = new File("${project.buildDir}/docker/Dockerfile").getText('UTF-8')
@@ -88,45 +81,8 @@ docker {
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }
 
-
-
 task prepareDeployment(type: Copy) {
     dependsOn "docker", "prepareDockerfile"
     from "${project.buildDir}/docker"
     into "${project.buildDir}/strydal-backend/"
 }
-
-////task deployToNow {
-////    doLast {
-////        new ByteArrayOutputStream().withStream { os ->
-////            def result = exec {
-////                executable = "${System.env.NVM_BIN}/now -T strydal ${project.buildDir}/docker"
-////                standardOutput = os
-////            }
-////            ext.now = os.toString()
-////        }
-////    }
-////}
-////
-//task deployToNow(type: Exec) {
-//    dependsOn "docker", "prepareDockerfile"
-//    executable "sh"
-//    args "-c", "${System.env.NVM_BIN}/now -T strydal ${project.buildDir}/docker"
-//    standardOutput = new ByteArrayOutputStream()
-//    ext.output = {
-//        return standardOutput.toString()
-//    }
-//    println "Output:\n$output";
-//}
-//
-////task deployToNow {
-////    dependsOn "docker", "prepareDockerfile"
-////    doLast {
-////        def stdout = new ByteArrayOutputStream()
-////        exec {
-////            executable "${System.env.NVM_BIN}/now -T strydal ${project.buildDir}/docker"
-////            standardOutput = stdout;
-////        }
-////        println "Output:\n$stdout";
-////    }
-////}
