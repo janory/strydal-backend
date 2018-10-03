@@ -1,12 +1,12 @@
 package com.strydal.backend.sessions
 
-import com.strydal.backend.instructor.Instructors
-import com.strydal.backend.series.Series
+import com.strydal.backend.instructor.InstructorsTable
+import com.strydal.backend.series.SeriesTable
 import org.jetbrains.exposed.dao.LongIdTable
 
-object Sessions : LongIdTable() {
-    val series = reference("series_id", Series)
-    val instructor = reference("instructor_id", Instructors)
+object SessionsTable : LongIdTable("sessions") {
+    val series = reference("series_id", SeriesTable)
+    val instructor = reference("instructor_id", InstructorsTable)
     val approxDuration = long("approx_duration")
     val airDate = datetime("air_date")
     val artwork = varchar("artwork", 255)

@@ -4,14 +4,14 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.Table
 import org.postgresql.util.PGobject
 
-object Series : LongIdTable() {
+object SeriesTable : LongIdTable("series") {
     val title = varchar("title", 255)
     val description = text("description")
     val artwork = varchar("artwork", 255)
 }
 
-object CategoriesConnect : Table() {
-    val series = reference("series_id", Series).uniqueIndex()
+object SeriesCategoriesTable : Table("series_categories_connect") {
+    val series = reference("series_id", SeriesTable).uniqueIndex()
     val categories = customEnumeration(
         "categories",
         "CategoryEnum",

@@ -2,17 +2,17 @@ package com.strydal.backend
 
 typealias ID = Long
 
-interface BaseService<TransientEntity, PersistentEntity> {
+interface BaseService<TE: TransientEntity, PE: PersistentEntity> {
 
-    fun insert(entity: TransientEntity): ID
+    fun insert(entity: TE): ID
 
-    fun update(entity: PersistentEntity)
+    fun update(entity: PE)
 
     fun deleteById(id: ID)
 
-    fun findAll(): List<PersistentEntity>
+    fun findAll(): List<PE>
 
-    fun findById(id: ID): PersistentEntity?
+    fun findById(id: ID): PE?
 
 }
 

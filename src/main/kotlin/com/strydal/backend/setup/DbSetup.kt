@@ -1,9 +1,9 @@
 package com.strydal.backend.setup
 
-import com.strydal.backend.instructor.Instructors
-import com.strydal.backend.series.CategoriesConnect
-import com.strydal.backend.series.Series
-import com.strydal.backend.sessions.Sessions
+import com.strydal.backend.instructor.InstructorsTable
+import com.strydal.backend.series.SeriesCategoriesTable
+import com.strydal.backend.series.SeriesTable
+import com.strydal.backend.sessions.SessionsTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.springframework.beans.factory.InitializingBean
@@ -20,7 +20,7 @@ class Setup(private val transactionTemplate: TransactionTemplate) : Initializing
                 exec("CREATE TYPE CategoryEnum AS ENUM ('CARDIO', 'STRENGTH', 'FLEXIBILITY', 'MINDFULNESS');")
                 commit()
             }
-            SchemaUtils.create(Instructors, Series, Sessions, CategoriesConnect)
+            SchemaUtils.create(InstructorsTable, SeriesTable, SessionsTable, SeriesCategoriesTable)
         }
     }
 }
