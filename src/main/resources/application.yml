@@ -7,7 +7,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/strydal
     username: strydal
     password: strydal
-    generate-ddl: false
+    generate-ddl: ${CREATE_DB:false}
 
 
 logging:
