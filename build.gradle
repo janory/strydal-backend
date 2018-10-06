@@ -64,7 +64,7 @@ dependencies {
 
 bootJar {
     baseName = "strydal-backend"
-    version = "0.0.2"
+    version = "0.0.4"
 }
 
 task prepareDockerfile {
@@ -86,4 +86,8 @@ task prepareDeployment(type: Copy) {
     dependsOn "docker", "prepareDockerfile"
     from "${project.buildDir}/docker"
     into "${project.buildDir}/strydal-backend/"
+    doFirst {
+        def strydalBackend = new File("${project.buildDir}/strydal-backend/")
+        strydalBackend.deleteDir()
+    }
 }

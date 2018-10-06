@@ -1,5 +1,7 @@
 package com.strydal.backend.instructor
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonProperty.Access
 import com.strydal.backend.base.ID
 import com.strydal.backend.instructor.InstructorView.Companion.fromView
 import com.strydal.backend.instructor.InstructorView.Companion.toView
@@ -46,6 +48,7 @@ internal class InstructorController(private val instructorService: InstructorSer
 }
 
 internal data class InstructorView(
+    @JsonProperty(access = Access.READ_ONLY)
     val id: Long?,
     val firstName: String,
     val lastName: String,
