@@ -11,7 +11,7 @@ data class Series(
     val artwork: URL
 ) : Entity
 
-data class SeriesWithID(
+data class SeriesWithId(
     override val entity: Series,
     override val id: ID
 ) : EntityWithID

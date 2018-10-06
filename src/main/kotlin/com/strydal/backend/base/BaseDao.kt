@@ -1,5 +1,6 @@
 package com.strydal.backend.base
 
+import org.jetbrains.exposed.dao.EntityID
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.deleteWhere
@@ -25,11 +26,11 @@ internal abstract class BaseDao<E : Entity, EWID : EntityWithID>(private val tab
 
     abstract fun toEntity(row: ResultRow): EWID
 
-    fun insert(entity: E): ID =
-        table.insertAndGetId(fromEntity(entity)).value
+    fun insert(entity: E): EntityID<ID> =
+        table.insertAndGetId(fromEntity(entity))
 
-    fun update(entity: EWID) {
-        table.update(where = { table.id eq entity.id }, body = fromEntity(entity.entity as E))
+    fun update(entityWithId: EWID) {
+        table.update(where = { table.id eq entityWithId.id }, body = fromEntity(entityWithId.entity as E))
     }
 
     fun deleteById(id: ID) {

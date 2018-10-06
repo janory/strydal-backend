@@ -32,7 +32,7 @@ docker run --net=host -p 8080:8080 -t com.strydal/strydal-backend
 ## Deploying strydal-backend to Zeit
 #### Pre requirements:
 - Docker has to be installed
-- now cli hast to be installed (install with `npm i -g now`)
+- now cli has to be installed (install with `npm i -g now`)
 - You have access to the `strydal` team in Zeit
 
 ```shell

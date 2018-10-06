@@ -11,7 +11,7 @@ internal class InstructorService(private val instructorDao: InstructorDao) :
     BaseService<Instructor, InstructorWithID> {
 
     @Transactional(readOnly = false)
-    override fun insert(entity: Instructor): ID = instructorDao.insert(entity)
+    override fun insert(entity: Instructor): ID = instructorDao.insert(entity).value
 
     @Transactional(readOnly = false)
     override fun update(entity: InstructorWithID) = instructorDao.update(entity)

@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component
 import java.net.URL
 
 @Component
-internal class SeriesDao : BaseDao<Series, SeriesWithID>(SeriesTable) {
+internal class SeriesDao : BaseDao<Series, SeriesWithId>(SeriesTable) {
     override fun <T : LongIdTable> fromEntity(entity: Series): DbRow<T> = {
         it[SeriesTable.title] = entity.title
         it[SeriesTable.description] = entity.description
         it[SeriesTable.artwork] = entity.artwork.toString()
     }
 
-    override fun toEntity(row: ResultRow): SeriesWithID =
-        SeriesWithID(
+    override fun toEntity(row: ResultRow): SeriesWithId =
+        SeriesWithId(
             Series(
                 row[SeriesTable.title],
                 row[SeriesTable.description],
