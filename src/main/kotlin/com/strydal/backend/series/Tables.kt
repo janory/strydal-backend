@@ -11,12 +11,17 @@ object SeriesTable : LongIdTable("series") {
 }
 
 object SeriesCategoriesTable : Table("series_categories_connect") {
-    val series = reference("series_id", SeriesTable).uniqueIndex()
-    val categories = customEnumeration(
-        "categories",
+    val seriesId = reference("series_id", SeriesTable)
+    val category = customEnumeration(
+        "category",
         "CategoryEnum",
         { value -> Category.valueOf(value as String) },
         { it -> PGEnum("CategoryEnum", it) })
+
+    init {
+        uniqueIndex(seriesId, category)
+    }
+
 }
 
 enum class Category { CARDIO, STRENGTH, FLEXIBILITY, MINDFULNESS }
