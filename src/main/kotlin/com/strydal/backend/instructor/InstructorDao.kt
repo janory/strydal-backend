@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.springframework.stereotype.Component
 
 @Component
-internal class InstructorDao : BaseDao<Instructor, InstructorWithID>(InstructorsTable) {
+internal class InstructorDao : BaseDao<Instructor, InstructorWithId>(InstructorsTable) {
     override fun <T : LongIdTable> fromEntity(entity: Instructor): DbRow<T> =
         {
             it[InstructorsTable.lastName] = entity.lastName
@@ -17,8 +17,8 @@ internal class InstructorDao : BaseDao<Instructor, InstructorWithID>(Instructors
         }
 
 
-    override fun toEntity(row: ResultRow): InstructorWithID =
-        InstructorWithID(
+    override fun toEntity(row: ResultRow): InstructorWithId =
+        InstructorWithId(
             Instructor(
                 row[InstructorsTable.lastName],
                 row[InstructorsTable.firstName],

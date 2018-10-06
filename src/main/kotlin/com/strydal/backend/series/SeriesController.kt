@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URL
 
 @RestController
-@RequestMapping("/series", produces = [(MediaType.APPLICATION_JSON_VALUE)])
+@RequestMapping("/seriesId", produces = [(MediaType.APPLICATION_JSON_VALUE)])
 internal class SeriesController(private val seriesService: SeriesService) {
 
     @PostMapping

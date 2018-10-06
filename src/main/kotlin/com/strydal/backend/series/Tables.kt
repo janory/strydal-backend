@@ -4,7 +4,7 @@ import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.Table
 import org.postgresql.util.PGobject
 
-object SeriesTable : LongIdTable("series") {
+object SeriesTable : LongIdTable("seriesId") {
     val title = varchar("title", 255)
     val description = text("description")
     val artwork = varchar("artwork", 255)

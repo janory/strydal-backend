@@ -1,4 +1,4 @@
-package com.strydal.backend.instructor
+package com.strydal.backend.sessions
 
 import com.strydal.backend.base.ID
 import org.springframework.http.MediaType
@@ -12,27 +12,26 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/instructors", produces = [(MediaType.APPLICATION_JSON_VALUE)])
-internal class InstructorsController(private val instructorService: InstructorService) {
+@RequestMapping("/sessions", produces = [(MediaType.APPLICATION_JSON_VALUE)])
+internal class SessionController(private val sessionService: SessionService) {
 
     @PostMapping
-    fun insert(@RequestBody instructor: Instructor): ID =
-        instructorService.insert(instructor)
+    fun insert(@RequestBody session: Session): ID =
+        sessionService.insert(session)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable("id") id: Long, @RequestBody instructor: Instructor) =
-        instructorService.update(InstructorWithID(instructor, id))
-
+    fun update(@PathVariable("id") id: Long, @RequestBody session: Session) =
+        sessionService.update(SessionWithId(session, id))
 
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable("id") id: Long) =
-        instructorService.deleteById(id)
+        sessionService.deleteById(id)
 
     @GetMapping
     fun findAll() =
-        instructorService.findAll()
+        sessionService.findAll()
 
     @GetMapping("/{id}")
     fun find(@PathVariable("id") id: Long) =
-        instructorService.findById(id)
+        sessionService.findById(id)
 }

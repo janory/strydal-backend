@@ -11,7 +11,7 @@ data class Instructor(
     val avatar: String
 ) : Entity
 
-data class InstructorWithID(
+data class InstructorWithId(
     override val entity: Instructor,
     override val id: ID
 ) : EntityWithID

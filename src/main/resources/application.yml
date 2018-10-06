@@ -9,13 +9,14 @@ spring:
     password: strydal
     generate-ddl: ${CREATE_DB:false}
 
+  jackson:
+    deserialization:
+      adjust_dates_to_context_time_zone: false
 
 logging:
   level:
     org.springframework.web.servlet: INFO
     Exposed: DEBUG
-
-
 
 app:
   appName: "strydal-backend"
