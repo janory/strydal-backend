@@ -64,7 +64,7 @@ dependencies {
 
 bootJar {
     baseName = "strydal-backend"
-    version = "0.0.1"
+    version = "0.0.2"
 }
 
 task prepareDockerfile {

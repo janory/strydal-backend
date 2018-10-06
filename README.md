@@ -37,8 +37,23 @@ docker run --net=host -p 8080:8080 -t com.strydal/strydal-backend
 
 ```shell
 ./deploy.sh
-now -T strydal alias rm strydal-backend
-now -T strydal alias [new-url] strydal-backend
-now -T strydal scale strydal-backend.now.sh 1
-now -T strydal scale [prev-url] 0
+```
+
+## Setup Zeit for deployments (One time only)
+#### Pre requirements:
+- The `api.strydal.com` hostname is setup properly
+
+```shell
+now -T strydal secrets add db-host "databaseIPOrHostname"
+now -T strydal secrets add db-port "5432"
+now -T strydal secrets add db-user "strydal"
+now -T strydal secrets add db-password "databasePassword"
+now -T strydal secrets add spring-profile "prod"
+```
+
+#### Scale down to 0 all the instances for the domain, except Brussels
+On every new deployment the scale rules will be copied from the previous alias and the previous instance will scaled down.
+```shell
+now -T strydal scale api.strydal.com 0
+now -T strydal scale api.strydal.com bru1 1
 ```
