@@ -18,8 +18,8 @@ class Setup(private val transactionTemplate: TransactionTemplate) : Initializing
     override fun afterPropertiesSet() {
         transactionTemplate.execute {
             with(TransactionManager.current()) {
-//                exec("CREATE TYPE CategoryEnum AS ENUM ('CARDIO', 'STRENGTH', 'FLEXIBILITY', 'MINDFULNESS');")
-//                exec("CREATE TYPE USerRoleEnum AS ENUM ('USER', 'ADMIN');")
+                exec("CREATE TYPE CategoryEnum AS ENUM ('CARDIO', 'STRENGTH', 'FLEXIBILITY', 'MINDFULNESS');")
+                exec("CREATE TYPE USerRoleEnum AS ENUM ('USER', 'ADMIN');")
                 commit()
             }
             SchemaUtils.create(InstructorsTable, SeriesTable, SessionsTable, SeriesCategoriesTable, UsersTable)
