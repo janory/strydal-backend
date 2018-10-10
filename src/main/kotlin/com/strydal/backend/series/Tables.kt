@@ -1,5 +1,6 @@
 package com.strydal.backend.series
 
+import com.strydal.backend.base.PGEnum
 import org.jetbrains.exposed.dao.LongIdTable
 import org.jetbrains.exposed.sql.Table
 import org.postgresql.util.PGobject
@@ -25,10 +26,3 @@ object SeriesCategoriesTable : Table("series_categories_connect") {
 }
 
 enum class Category { CARDIO, STRENGTH, FLEXIBILITY, MINDFULNESS }
-
-class PGEnum<T : Enum<T>>(enumTypeName: String, enumValue: T?) : PGobject() {
-    init {
-        value = enumValue?.name
-        type = enumTypeName
-    }
-}
