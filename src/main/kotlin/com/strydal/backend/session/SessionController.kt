@@ -1,10 +1,10 @@
-package com.strydal.backend.sessions
+package com.strydal.backend.session
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access
 import com.strydal.backend.base.ID
-import com.strydal.backend.sessions.SessionView.Companion.fromView
-import com.strydal.backend.sessions.SessionView.Companion.toView
+import com.strydal.backend.session.SessionView.Companion.fromView
+import com.strydal.backend.session.SessionView.Companion.toView
 import org.joda.time.DateTime
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping

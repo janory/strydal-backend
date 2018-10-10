@@ -1,4 +1,4 @@
-package com.strydal.backend.sessions
+package com.strydal.backend.session
 
 import com.strydal.backend.base.BaseService
 import com.strydal.backend.base.ID

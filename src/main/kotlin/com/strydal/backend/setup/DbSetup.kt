@@ -3,7 +3,7 @@ package com.strydal.backend.setup
 import com.strydal.backend.instructor.InstructorsTable
 import com.strydal.backend.series.SeriesCategoriesTable
 import com.strydal.backend.series.SeriesTable
-import com.strydal.backend.sessions.SessionsTable
+import com.strydal.backend.session.SessionsTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.springframework.beans.factory.InitializingBean
