@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 internal class InstructorDao : BaseDao<Instructor, InstructorWithId>(InstructorsTable) {
     override fun <T : LongIdTable> fromEntity(entity: Instructor): DbRow<T> =
         {
-            it[InstructorsTable.lastName] = entity.lastName
             it[InstructorsTable.firstName] = entity.firstName
+            it[InstructorsTable.lastName] = entity.lastName
             it[InstructorsTable.biography] = entity.biography
             it[InstructorsTable.avatar] = entity.avatar
         }
@@ -20,8 +20,8 @@ internal class InstructorDao : BaseDao<Instructor, InstructorWithId>(Instructors
     override fun toEntity(row: ResultRow): InstructorWithId =
         InstructorWithId(
             Instructor(
-                row[InstructorsTable.lastName],
                 row[InstructorsTable.firstName],
+                row[InstructorsTable.lastName],
                 row[InstructorsTable.biography],
                 row[InstructorsTable.avatar]
             ),
