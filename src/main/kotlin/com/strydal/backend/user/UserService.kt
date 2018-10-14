@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional
 internal class UserService(private val userDao: UserDao) {
 
     @Transactional(readOnly = false)
-    fun insert(entity: User) =
+    fun insert(user: UserWithPassword) =
         Either.cond(
-            userDao.findByEmail(entity.email) == null,
-            { userDao.insert(entity).value },
+            userDao.findByEmail(user.entity.email) == null,
+            { userDao.insert(user).value },
             { Error.EmailAlreadyRegistered })
 
     @Transactional(readOnly = false)
@@ -25,6 +25,4 @@ internal class UserService(private val userDao: UserDao) {
     fun findAll(): List<UserWithId> = userDao.findAll()
 
     fun findById(id: ID): UserWithId? = userDao.findById(id)
-
-    fun findByEmail(address: String): UserWithId? = userDao.findByEmail(address)
 }
