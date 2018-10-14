@@ -6,6 +6,7 @@ import arrow.instances.ForEither
 import arrow.typeclasses.binding
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access
+import com.strydal.backend.base.buildLocation
 import com.strydal.backend.user.UserView.Companion.fromView
 import com.strydal.backend.user.UserView.Companion.toView
 import org.joda.time.DateTime
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.util.UriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Email
 
@@ -78,16 +78,6 @@ internal class UserController(private val userService: UserService) {
     }
 
     private companion object {
-        private fun buildLocation(path: String, request: HttpServletRequest) =
-            UriComponentsBuilder.newInstance()
-                .scheme(request.scheme)
-                .host(request.serverName)
-                .port(request.serverPort)
-                .path(path)
-                .build()
-                .toUri()
-
-
         private fun isPasswordSameAsConfirmPassword(user: UserView) =
             Either.cond(user.password != user.confirmPassword,
                 { user },
