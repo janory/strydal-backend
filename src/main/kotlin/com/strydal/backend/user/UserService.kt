@@ -22,4 +22,6 @@ internal class UserService(private val userDao: UserDao) : BaseService<User, Use
 
     override fun findById(id: ID): UserWithId? = userDao.findById(id)
 
+    fun findByEmail(address: String): UserWithId? = userDao.findByEmail(address)
+
 }

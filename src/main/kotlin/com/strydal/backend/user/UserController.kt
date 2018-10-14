@@ -2,11 +2,11 @@ package com.strydal.backend.user
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access
-import com.strydal.backend.base.ID
 import com.strydal.backend.user.UserView.Companion.fromView
 import com.strydal.backend.user.UserView.Companion.toView
 import org.joda.time.DateTime
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.util.UriComponentsBuilder
+import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Email
 
 @RestController
@@ -23,8 +25,27 @@ import javax.validation.constraints.Email
 internal class UserController(private val userService: UserService) {
 
     @PostMapping
-    fun insert(@Validated @RequestBody user: UserView): ID =
-        userService.insert(fromView(user))
+    fun insert(
+        request: HttpServletRequest,
+        @Validated @RequestBody user: UserView
+    ): ResponseEntity<*> {
+        return if (user.password !== user.confirmPassword) {
+            ResponseEntity.badRequest().body<String?>("The passwords are different! Please check again!")
+        } else {
+            if (userService.findByEmail(user.email) != null) {
+                ResponseEntity.badRequest().body<String?>("The Email address is already registered!")
+            } else {
+                val id = userService.insert(fromView(user))
+                val location = UriComponentsBuilder.newInstance()
+                    .scheme(request.scheme)
+                    .host(request.serverName)
+                    .port(request.serverPort)
+                    .path("/users/$id")
+                    .build()
+                ResponseEntity.created(location.toUri()).build()
+            }
+        }
+    }
 
     @PutMapping("/{id}")
     fun update(@PathVariable("id") id: Long, @Validated @RequestBody user: UserView) =
@@ -57,6 +78,10 @@ internal data class UserView(
     val lastName: String,
     @field:Email
     val email: String,
+    @JsonProperty(access = Access.WRITE_ONLY)
+    val password: String,
+    @JsonProperty(access = Access.WRITE_ONLY)
+    val confirmPassword: String,
     val birthday: DateTime,
     @JsonProperty(access = Access.READ_ONLY)
     val role: Role?
@@ -67,6 +92,7 @@ internal data class UserView(
                 user.firstName,
                 user.lastName,
                 user.email,
+                user.password,
                 user.birthday,
                 Role.USER
             )
@@ -77,6 +103,8 @@ internal data class UserView(
                 user.entity.firstName,
                 user.entity.lastName,
                 user.entity.email,
+                "",
+                "",
                 user.entity.birthday,
                 user.entity.role
             )
