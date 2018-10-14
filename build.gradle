@@ -4,6 +4,7 @@ buildscript {
         springBootVersion = "2.0.5.RELEASE"
         exposedVersion = "0.10.5"
         dockerVersion = "0.20.1"
+        arrowVersion = "0.7.3"
     }
     repositories {
         mavenCentral()
@@ -59,6 +60,14 @@ dependencies {
     compile("org.jetbrains.exposed:exposed:$exposedVersion")
     compile("org.jetbrains.exposed:spring-transaction:$exposedVersion")
     compile("org.postgresql:postgresql")
+    compile "io.arrow-kt:arrow-core:$arrowVersion"
+    compile "io.arrow-kt:arrow-syntax:$arrowVersion"
+    compile "io.arrow-kt:arrow-typeclasses:$arrowVersion"
+    compile "io.arrow-kt:arrow-data:$arrowVersion"
+    compile "io.arrow-kt:arrow-instances-core:$arrowVersion"
+    compile "io.arrow-kt:arrow-instances-data:$arrowVersion"
+    kapt    "io.arrow-kt:arrow-annotations-processor:$arrowVersion"
+
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 

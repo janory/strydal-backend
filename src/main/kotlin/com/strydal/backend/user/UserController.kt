@@ -1,5 +1,9 @@
 package com.strydal.backend.user
 
+import arrow.core.Either
+import arrow.core.fix
+import arrow.instances.ForEither
+import arrow.typeclasses.binding
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access
 import com.strydal.backend.user.UserView.Companion.fromView
@@ -20,6 +24,9 @@ import org.springframework.web.util.UriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Email
 
+val <T> T.exhaustive: T get() = this
+
+
 @RestController
 @RequestMapping("/users", produces = [(MediaType.APPLICATION_JSON_VALUE)])
 internal class UserController(private val userService: UserService) {
@@ -28,21 +35,24 @@ internal class UserController(private val userService: UserService) {
     fun insert(
         request: HttpServletRequest,
         @Validated @RequestBody user: UserView
-    ): ResponseEntity<*> {
-        return if (user.password !== user.confirmPassword) {
-            ResponseEntity.badRequest().body<String?>("The passwords are different! Please check again!")
-        } else {
-            if (userService.findByEmail(user.email) != null) {
-                ResponseEntity.badRequest().body<String?>("The Email address is already registered!")
-            } else {
-                val id = userService.insert(fromView(user))
-                val location = UriComponentsBuilder.newInstance()
-                    .scheme(request.scheme)
-                    .host(request.serverName)
-                    .port(request.serverPort)
-                    .path("/users/$id")
-                    .build()
-                ResponseEntity.created(location.toUri()).build()
+    ): ResponseEntity<String> {
+        val errorOrId = ForEither<Error>() extensions {
+            binding {
+                val userView = isPasswordSameAsConfirmPassword(user).bind()
+                val mappedUser = Either.Right(fromView(userView)).bind()
+                val id = userService.insert(mappedUser).bind()
+                id
+            }.fix()
+        }
+
+        return when (errorOrId) {
+            is Either.Left -> when (errorOrId.a) {
+                is Error.PasswordsAreDifferent -> ResponseEntity.badRequest().body("The passwords are different! Please check again!")
+                is Error.EmailAlreadyRegistered -> ResponseEntity.badRequest().body("The Email address is already registered!")
+            }
+            is Either.Right -> {
+                val path = "/users/${errorOrId.b}"
+                ResponseEntity.created(buildLocation(path, request)).build()
             }
         }
     }
@@ -68,6 +78,23 @@ internal class UserController(private val userService: UserService) {
             null -> null
             else -> toView(user)
         }
+    }
+
+    private companion object {
+        private fun buildLocation(path: String, request: HttpServletRequest) =
+            UriComponentsBuilder.newInstance()
+                .scheme(request.scheme)
+                .host(request.serverName)
+                .port(request.serverPort)
+                .path(path)
+                .build()
+                .toUri()
+
+
+        private fun isPasswordSameAsConfirmPassword(user: UserView) =
+            Either.cond(user.password != user.confirmPassword,
+                { user },
+                { Error.PasswordsAreDifferent })
     }
 }
 
@@ -109,4 +136,8 @@ internal data class UserView(
                 user.entity.role
             )
     }
+}
+
+object Do {
+    inline infix fun <reified T> exhaustive(any: T?) = any
 }
