@@ -13,8 +13,8 @@ import com.strydal.backend.user.UserView.Companion.toView
 import org.joda.time.DateTime
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,7 +26,7 @@ import javax.validation.constraints.Email
 
 @RestController
 @RequestMapping("/users", produces = [(MediaType.APPLICATION_JSON_VALUE)])
-internal class UserController(private val userService: UserService) {
+internal class UserController(private val userService: UserService, private val passwordEncoder: PasswordEncoder) {
 
     @PostMapping
     fun insert(
@@ -37,7 +37,9 @@ internal class UserController(private val userService: UserService) {
             binding {
                 val userView = isPasswordSameAsConfirmPassword(user).bind()
                 val mappedUser = Either.Right(fromNewUserView(userView)).bind()
-                val userId = userService.insert(UserWithPassword(mappedUser, user.password)).bind()
+                val userId = userService.insert(
+                    UserWithPassword(mappedUser, passwordEncoder.encode(user.password))
+                ).bind()
                 userId
             }.fix()
         }
