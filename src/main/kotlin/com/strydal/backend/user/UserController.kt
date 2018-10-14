@@ -37,8 +37,8 @@ internal class UserController(private val userService: UserService) {
             binding {
                 val userView = isPasswordSameAsConfirmPassword(user).bind()
                 val mappedUser = Either.Right(fromView(userView)).bind()
-                val id = userService.insert(mappedUser).bind()
-                id
+                val userId = userService.insert(mappedUser).bind()
+                userId
             }.fix()
         }
 
