@@ -24,9 +24,6 @@ import org.springframework.web.util.UriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 import javax.validation.constraints.Email
 
-val <T> T.exhaustive: T get() = this
-
-
 @RestController
 @RequestMapping("/users", produces = [(MediaType.APPLICATION_JSON_VALUE)])
 internal class UserController(private val userService: UserService) {
