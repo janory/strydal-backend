@@ -45,7 +45,7 @@ internal class UserController(private val userService: UserService) {
         return when (errorOrId) {
             is Either.Left -> when (errorOrId.a) {
                 is Error.PasswordsAreDifferent -> ResponseEntity.badRequest().body("The passwords are different! Please check again!")
-                is Error.EmailAlreadyRegistered -> ResponseEntity.badRequest().body("The Email address is already registered!")
+                is Error.EmailAlreadyRegistered -> ResponseEntity.badRequest().body("This Email address is already registered!")
             }
             is Either.Right -> {
                 val path = "/users/${errorOrId.b}"
