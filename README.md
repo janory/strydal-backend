@@ -49,6 +49,7 @@ now -T strydal secrets add db-port "5432"
 now -T strydal secrets add db-user "strydal"
 now -T strydal secrets add db-password "databasePassword"
 now -T strydal secrets add spring-profile "prod"
+now -T strydal secrets add jwt-secret-key "jwtSecretKey"
 ```
 
 #### Scale down to 0 all the instances for the domain, except Brussels
