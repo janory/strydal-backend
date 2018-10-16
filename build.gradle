@@ -52,22 +52,28 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-jdbc")
+
     compile("org.springframework.boot:spring-boot-starter-security")
+    compile("com.auth0:java-jwt:3.4.0")
+
     compile("com.fasterxml.jackson.module:jackson-module-kotlin")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-joda")
+
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
+
+    compile("org.postgresql:postgresql")
+    compile("org.springframework.boot:spring-boot-starter-jdbc")
     compile("org.jetbrains.exposed:exposed:$exposedVersion")
     compile("org.jetbrains.exposed:spring-transaction:$exposedVersion")
-    compile("org.postgresql:postgresql")
-    compile "io.arrow-kt:arrow-core:$arrowVersion"
-    compile "io.arrow-kt:arrow-syntax:$arrowVersion"
-    compile "io.arrow-kt:arrow-typeclasses:$arrowVersion"
-    compile "io.arrow-kt:arrow-data:$arrowVersion"
-    compile "io.arrow-kt:arrow-instances-core:$arrowVersion"
-    compile "io.arrow-kt:arrow-instances-data:$arrowVersion"
-    kapt    "io.arrow-kt:arrow-annotations-processor:$arrowVersion"
+
+    compile("io.arrow-kt:arrow-core:$arrowVersion")
+    compile("io.arrow-kt:arrow-syntax:$arrowVersion")
+    compile("io.arrow-kt:arrow-typeclasses:$arrowVersion")
+    compile("io.arrow-kt:arrow-data:$arrowVersion")
+    compile("io.arrow-kt:arrow-instances-core:$arrowVersion")
+    compile("io.arrow-kt:arrow-instances-data:$arrowVersion")
+    kapt("io.arrow-kt:arrow-annotations-processor:$arrowVersion")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }

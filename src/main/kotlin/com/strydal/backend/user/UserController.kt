@@ -36,10 +36,8 @@ internal class UserController(private val userService: UserService, private val 
         val errorOrId = ForEither<Error>() extensions {
             binding {
                 val userView = isPasswordSameAsConfirmPassword(user).bind()
-                val mappedUser = Either.Right(fromNewUserView(userView)).bind()
-                val userId = userService.insert(
-                    UserWithPassword(mappedUser, passwordEncoder.encode(user.password))
-                ).bind()
+                val mappedUser = Either.Right(fromNewUserView(passwordEncoder)(userView)).bind()
+                val userId = userService.insert(mappedUser).bind()
                 userId
             }.fix()
         }
@@ -98,14 +96,16 @@ internal data class NewUserView(
     val confirmPassword: String
 ) {
     companion object {
-        fun fromNewUserView(user: NewUserView) =
+        fun fromNewUserView(passwordEncoder: PasswordEncoder) = { user: NewUserView ->
             User(
                 user.firstName,
                 user.lastName,
                 user.email,
+                passwordEncoder.encode(user.password),
                 user.birthday,
                 Role.USER
             )
+        }
     }
 }
 
@@ -120,15 +120,6 @@ internal data class UserView(
     val birthday: DateTime
 ) {
     companion object {
-        fun fromView(user: UserView) =
-            User(
-                user.firstName,
-                user.lastName,
-                user.email,
-                user.birthday,
-                Role.USER
-            )
-
         fun toView(user: UserWithId) =
             UserView(
                 user.id,

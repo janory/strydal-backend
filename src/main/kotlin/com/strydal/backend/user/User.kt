@@ -9,13 +9,9 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
+    val password: String,
     val birthday: DateTime,
     val role: Role
-) : Entity
-
-data class UserWithPassword(
-    val entity: User,
-    val password: String
 ) : Entity
 
 data class UserWithId(
