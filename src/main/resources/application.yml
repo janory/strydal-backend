@@ -14,7 +14,7 @@ spring:
       adjust_dates_to_context_time_zone: false
 
   security:
-    jwt_secret_key: ${JWT_SECRET_KEY}
+    jwt_secret_key: TopSecretKey
 
 logging:
   level:

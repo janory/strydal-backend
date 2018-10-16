@@ -22,6 +22,7 @@ buildscript {
 
 apply plugin: "kotlin"
 apply plugin: "kotlin-spring"
+apply plugin: "kotlin-kapt"
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "com.palantir.docker"
