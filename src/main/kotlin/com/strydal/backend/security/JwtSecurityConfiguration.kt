@@ -51,15 +51,28 @@ internal class JwtSecurityConfiguration(
 
 @Component
 internal class CustomPermissionChecker {
-    fun isOwnResource(userId: String): Boolean {
+
+    private fun isAdminUser(roleAndPermissions: Map<String, Set<String>>) =
+        roleAndPermissions.getValue(CLAIM_ROLE).first() == Role.ADMIN.toString()
+
+    private fun isAllowedToRead(roleAndPermissions: Map<String, Set<String>>, userIdToCheck: String) =
+        when (roleAndPermissions[CLAIM_PERMISSIONS]) {
+            null -> false
+            else -> {
+                val permissions = roleAndPermissions.getValue(CLAIM_PERMISSIONS)
+                val userPermissions = permissions.find { it.startsWith(CLAIM_USER_PERMISSIONS) }
+                userPermissions?.let {
+                    val userPermissionsArr = it.split(':')
+                    val rights = userPermissionsArr[1]
+                    val userId = userPermissionsArr[2]
+                    (rights == "*" || rights.contains("read", true)) && userId == userIdToCheck
+                } ?: false
+            }
+        }
+
+    fun isOwnResource(userIdToCheck: String): Boolean {
         val authentication = SecurityContextHolder.getContext().authentication
         val roleAndPermissions = authentication.getRoleAndPermissionsMap()
-        return roleAndPermissions.getValue(CLAIM_ROLE).first() == Role.ADMIN.toString() ||
-                roleAndPermissions[CLAIM_PERMISSIONS]?.let {
-                    val userPerm = it.find { it.startsWith(CLAIM_USER_PERMISSIONS) }
-                    userPerm?.let {
-                        it.substringAfterLast(':') == userId
-                    } ?: false
-                } ?: false
+        return isAdminUser(roleAndPermissions) || isAllowedToRead(roleAndPermissions, userIdToCheck)
     }
 }
