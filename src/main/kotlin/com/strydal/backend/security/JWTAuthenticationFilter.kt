@@ -5,6 +5,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm.HMAC512
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.strydal.backend.security.SecurityConstants.BEARER_TYPE
+import com.strydal.backend.security.SecurityConstants.CLAIM_PERMISSIONS
 import com.strydal.backend.security.SecurityConstants.CLAIM_ROLE
 import com.strydal.backend.security.SecurityConstants.EXPIRATION_TIME
 import org.springframework.http.HttpHeaders
@@ -50,10 +51,15 @@ internal class JWTAuthenticationFilter(
         chain: FilterChain,
         auth: Authentication
     ) {
+        val roleAndPermissions = auth.getRoleAndPermissionsMap()
+
         val signedToken = JWT.create()
             .withSubject((auth.principal as User).username)
-            .withClaim(CLAIM_ROLE, auth.authorities.first().authority)
-//            .withClaim(SecurityConstants.CLAIM_USER_ID, auth.details as Long)
+            .withArrayClaim(
+                CLAIM_PERMISSIONS,
+                roleAndPermissions.getOrDefault(CLAIM_PERMISSIONS, emptySet()).toTypedArray()
+            )
+            .withClaim(CLAIM_ROLE, roleAndPermissions.getOrDefault(CLAIM_ROLE, emptySet()).first())
             .withExpiresAt(Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(HMAC512(jwtSecretKey))
 

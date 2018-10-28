@@ -3,9 +3,8 @@ package com.strydal.backend.security
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.strydal.backend.security.SecurityConstants.BEARER_TYPE
+import com.strydal.backend.security.SecurityConstants.CLAIM_PERMISSIONS
 import com.strydal.backend.security.SecurityConstants.CLAIM_ROLE
-import com.strydal.backend.security.SecurityConstants.CLAIM_USER_ID
-import com.strydal.backend.security.SecurityConstants.ROLE_PREFIX
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -45,11 +44,13 @@ internal class JWTAuthorizationFilter(
             .verify(authHeader.replace(BEARER_TYPE, ""))
         val emailAddress = token.subject
         val role = token.getClaim(CLAIM_ROLE).asString()
-//        val userId = token.getClaim(CLAIM_USER_ID).asLong()
-        val userToken =  UsernamePasswordAuthenticationToken(
-            emailAddress, null, setOf(SimpleGrantedAuthority("$ROLE_PREFIX$role"))
+
+        val permissions = token.getClaim(CLAIM_PERMISSIONS).asArray(String::class.java)
+        val setOfPermissions = permissions.map {
+            SimpleGrantedAuthority("${CLAIM_PERMISSIONS}_$it")
+        }.toSet()
+        return UsernamePasswordAuthenticationToken(
+            emailAddress, null, setOfPermissions + SimpleGrantedAuthority("${CLAIM_ROLE.toUpperCase()}_$role")
         )
-//        userToken.details = userId
-        return userToken
     }
 }

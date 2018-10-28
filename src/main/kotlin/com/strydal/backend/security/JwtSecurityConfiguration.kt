@@ -1,7 +1,9 @@
 package com.strydal.backend.security
 
-import com.auth0.jwt.JWT
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.strydal.backend.security.SecurityConstants.CLAIM_PERMISSIONS
+import com.strydal.backend.security.SecurityConstants.CLAIM_ROLE
+import com.strydal.backend.security.SecurityConstants.CLAIM_USER_PERMISSIONS
 import com.strydal.backend.user.Role
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
@@ -29,7 +31,7 @@ internal class JwtSecurityConfiguration(
         http.cors().and().csrf().disable().authorizeRequests()
             .mvcMatchers(HttpMethod.POST, "/users").permitAll()
             .mvcMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.toString())
-//            .mvcMatchers(HttpMethod.GET, "/users/{userId}/**").access("@customPermissionChecker.isOwnResource(#userId)")
+            .mvcMatchers(HttpMethod.GET, "/users/{userId}/**").access("@customPermissionChecker.isOwnResource(#userId)")
             .mvcMatchers(HttpMethod.PUT).hasRole(Role.ADMIN.toString())
             .mvcMatchers(HttpMethod.POST).hasRole(Role.ADMIN.toString())
             .mvcMatchers(HttpMethod.DELETE).hasRole(Role.ADMIN.toString())
@@ -42,17 +44,22 @@ internal class JwtSecurityConfiguration(
     }
 
 
-
     public override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService<AuthUserProvider>(authUserProvider).passwordEncoder(passwordEncoder)
     }
 }
 
-//@Component
-//internal class CustomPermissionChecker {
-//    fun isOwnResource(userId: String): Boolean {
-//        val authentication = SecurityContextHolder.getContext().authentication
-//        authentication.details
-//        return false
-//    }
-//}
+@Component
+internal class CustomPermissionChecker {
+    fun isOwnResource(userId: String): Boolean {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val roleAndPermissions = authentication.getRoleAndPermissionsMap()
+        return roleAndPermissions.getValue(CLAIM_ROLE).first() == Role.ADMIN.toString() ||
+                roleAndPermissions[CLAIM_PERMISSIONS]?.let {
+                    val userPerm = it.find { it.startsWith(CLAIM_USER_PERMISSIONS) }
+                    userPerm?.let {
+                        it.substringAfterLast(':') == userId
+                    } ?: false
+                } ?: false
+    }
+}
