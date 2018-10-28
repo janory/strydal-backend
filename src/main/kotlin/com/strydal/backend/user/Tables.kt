@@ -7,6 +7,7 @@ object UsersTable : LongIdTable("users") {
     val firstName = varchar("first_name", 255)
     val lastName = varchar("last_name", 255)
     val email = varchar("email", 255).uniqueIndex()
+    val password = varchar("password", 60)
     val birthday = datetime("birthday")
     val role = customEnumeration(
         "role",

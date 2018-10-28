@@ -7,7 +7,8 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import javax.sql.DataSource
 import com.fasterxml.jackson.datatype.joda.JodaModule
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @SpringBootApplication
@@ -18,6 +19,11 @@ class BackendApplication {
     @Bean
     fun jodaModule(): Module {
         return JodaModule()
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }
 

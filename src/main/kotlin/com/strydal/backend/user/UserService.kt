@@ -1,25 +1,30 @@
 package com.strydal.backend.user
 
-import com.strydal.backend.base.BaseService
+import arrow.core.Either
 import com.strydal.backend.base.ID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-internal class UserService(private val userDao: UserDao) : BaseService<User, UserWithId> {
+internal class UserService(private val userDao: UserDao) {
 
     @Transactional(readOnly = false)
-    override fun insert(entity: User): ID = userDao.insert(entity).value
+    fun insert(user: User) =
+        Either.cond(
+            userDao.findByEmail(user.email) == null,
+            { userDao.insert(user).value },
+            { Error.EmailAlreadyRegistered })
 
     @Transactional(readOnly = false)
-    override fun update(entity: UserWithId) = userDao.update(entity)
+    fun update(entity: UserWithId) = userDao.update(entity)
 
     @Transactional(readOnly = false)
-    override fun deleteById(id: ID) = userDao.deleteById(id)
+    fun deleteById(id: ID) = userDao.deleteById(id)
 
-    override fun findAll(): List<UserWithId> = userDao.findAll()
+    fun findAll(): List<UserWithId> = userDao.findAll()
 
-    override fun findById(id: ID): UserWithId? = userDao.findById(id)
+    fun findById(id: ID): UserWithId? = userDao.findById(id)
 
+    fun findByEmail(address: String): UserWithId? = userDao.findByEmail(address)
 }
