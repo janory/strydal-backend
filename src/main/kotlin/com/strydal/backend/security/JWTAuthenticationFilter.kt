@@ -61,6 +61,7 @@ internal class JWTAuthenticationFilter(
             )
             .withClaim(CLAIM_ROLE, roleAndPermissions.getOrDefault(CLAIM_ROLE, emptySet()).first())
             .withExpiresAt(Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLIS))
+            .withJWTId(UUID.randomUUID().toString())
             .sign(HMAC512(jwtSecretKey))
 
         res.addHeader(HttpHeaders.AUTHORIZATION, BEARER_TYPE + signedToken)
