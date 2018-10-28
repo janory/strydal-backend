@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.strydal.backend.security.SecurityConstants.BEARER_TYPE
 import com.strydal.backend.security.SecurityConstants.CLAIM_PERMISSIONS
 import com.strydal.backend.security.SecurityConstants.CLAIM_ROLE
-import com.strydal.backend.security.SecurityConstants.EXPIRATION_TIME
+import com.strydal.backend.security.SecurityConstants.EXPIRATION_TIME_IN_MILLIS
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -60,7 +60,7 @@ internal class JWTAuthenticationFilter(
                 roleAndPermissions.getOrDefault(CLAIM_PERMISSIONS, emptySet()).toTypedArray()
             )
             .withClaim(CLAIM_ROLE, roleAndPermissions.getOrDefault(CLAIM_ROLE, emptySet()).first())
-            .withExpiresAt(Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .withExpiresAt(Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLIS))
             .sign(HMAC512(jwtSecretKey))
 
         res.addHeader(HttpHeaders.AUTHORIZATION, BEARER_TYPE + signedToken)
